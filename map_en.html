@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Map of the Single-Cycle Processor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <nav class="bg-blue-700 shadow-lg mb-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Desktop Menu -->
+          <div
+            class="hidden md:flex items-center space-x-8 w-full justify-center"
+          >
+            <a
+              href="#map"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Map
+            </a>
+            <a
+              href="#study"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Study
+            </a>
+
+            <!-- Language Selector -->
+            <div class="relative">
+              <button
+                onclick="toggleLanguageDropdown()"
+                class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20 flex items-center"
+              >
+                <span id="current-lang">EN</span>
+                <svg
+                  class="ml-1 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </button>
+
+              <div
+                id="language-dropdown"
+                class="hidden absolute right-0 mt-2 w-24 bg-white rounded-md shadow-lg z-50"
+              >
+                <div class="py-1">
+                  <button
+                    onclick="selectLanguage('EN')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  >
+                    EN
+                  </button>
+                  <button
+                    onclick="selectLanguage('HE')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  >
+                    HE
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile menu button -->
+          <div class="md:hidden flex items-center">
+            <button
+              onclick="toggleMobileMenu()"
+              class="text-white hover:text-blue-200 p-2 rounded-md"
+            >
+              <svg
+                id="menu-icon"
+                class="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+              <svg
+                id="close-icon"
+                class="h-6 w-6 hidden"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden pb-4">
+          <div class="flex flex-col space-y-2">
+            <a
+              href="#map"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Map
+            </a>
+            <a
+              href="#study"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Study
+            </a>
+
+            <!-- Mobile Language Selector -->
+            <div class="px-3 py-2">
+              <span class="text-white text-sm opacity-75 block mb-2"
+                >Language:</span
+              >
+              <div class="flex space-x-3">
+                <button
+                  onclick="selectLanguage('EN')"
+                  id="mobile-en"
+                  class="px-3 py-1 rounded-md text-sm font-medium bg-white bg-opacity-20 text-white"
+                >
+                  EN
+                </button>
+                <button
+                  onclick="selectLanguage('HE')"
+                  id="mobile-he"
+                  class="px-3 py-1 rounded-md text-sm font-medium text-white hover:bg-white hover:bg-opacity-20"
+                >
+                  HE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+        Interactive Map Of The Single-Cycle Processor
+      </h1>
+
+      <div class="flex justify-center mb-8">
+        <!-- SVG Container - automatically scales with viewport -->
+        <svg
+          viewBox="0 0 1400 720"
+          class="w-full max-w-6xl border-2 border-gray-300 rounded-lg shadow-lg"
+          style="background: white"
+        >
+          <!-- Define blur filter for softer appearance -->
+          <defs>
+            <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+            </filter>
+          </defs>
+
+          <!-- Your blueprint image as SVG background -->
+          <image href="datapath1.png" x="0" y="0" width="1400" height="720" />
+
+          <!-- Interactive overlays with updated coordinates, blur effects and lower opacity -->
+
+          <!-- Instruction Memory -->
+          <rect
+            x="120"
+            y="295"
+            width="194"
+            height="178"
+            fill="rgba(59, 130, 246, 0)"
+            stroke="rgba(59, 130, 246, 0.2)"
+            stroke-width="0"
+            rx="8"
+            ry="8"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Instruction Memory', 'Stores the program instructions. The PC (Program Counter) provides the address, and this memory returns the 32-bit instruction to be executed. It\s read-only during normal operation.')"
+          />
+
+          <!-- Program Counter -->
+          <rect
+            x="50"
+            y="335"
+            width="36"
+            height="88"
+            fill="rgba(16, 185, 129, 0)"
+            stroke="rgba(16, 185, 129, 0.2)"
+            stroke-width="0"
+            rx="6"
+            ry="6"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Program Counter (PC)', 'Contains the address of the current instruction being executed. It\s incremented by 4 each cycle (since instructions are 4 bytes) to point to the next instruction in sequence.')"
+          />
+
+          <!-- PC+4 Adder -->
+          <rect
+            x="367"
+            y="73"
+            width="99"
+            height="145"
+            fill="rgba(245, 101, 101, 0)"
+            stroke="rgba(245, 101, 101, 0.2)"
+            stroke-width="0"
+            rx="8"
+            ry="8"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'PC+4 Adder', 'Adds 4 to the current PC value to calculate the address of the next sequential instruction. This supports the normal flow of instruction execution.')"
+          />
+
+          <!-- Shift Left 2 (Branch) -->
+          <circle
+            cx="540"
+            cy="200"
+            r="44"
+            fill="rgba(168, 85, 247, 0)"
+            stroke="rgba(168, 85, 247, 0.2)"
+            stroke-width="0"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Shift Left 2 (Branch)', 'Shifts the sign-extended immediate value left by 2 positions (multiply by 4) to convert the word offset into a byte offset for branch target calculation.')"
+          />
+
+          <!-- Shift Left 2 (Jump) -->
+          <rect
+            x="770"
+            y="169"
+            width="73"
+            height="111"
+            fill="rgba(251, 191, 36, 0)"
+            stroke="rgba(251, 191, 36, 0.2)"
+            stroke-width="0"
+            rx="8"
+            ry="8"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Shift Left 2 (Jump)', 'Shifts the jump address left by 2 positions to convert the word address into a byte address, preparing it for the jump target calculation.')"
+          />
+
+          <!-- Branch Target Adder -->
+          <rect
+            x="870"
+            y="126"
+            width="90"
+            height="133"
+            fill="rgba(14, 165, 233, 0)"
+            stroke="rgba(14, 165, 233, 0.2)"
+            stroke-width="0"
+            rx="8"
+            ry="8"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Branch Target Adder', 'Calculates the branch target address by adding PC+4 to the shifted sign-extended immediate value. Used for conditional branch instructions.')"
+          />
+
+          <!-- PC Source Multiplexer -->
+          <rect
+            x="984"
+            y="74"
+            width="45"
+            height="145"
+            fill="rgba(236, 72, 153, 0)"
+            stroke="rgba(236, 72, 153, 0.2)"
+            stroke-width="0"
+            rx="6"
+            ry="6"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'PC Source Multiplexer', 'Selects the next PC value: PC+4 for sequential execution, branch target for taken branches, or jump address for jump instructions. Controlled by PCSrc signal.')"
+          />
+
+          <!-- ALU -->
+          <polygon
+            points="854,313 853,380 887,402 855,424 853,494 970,436 970,370"
+            fill="rgba(245, 101, 101, 0)"
+            stroke="rgba(245, 101, 101, 0.2)"
+            stroke-width="0"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Arithmetic Logic Unit (ALU)', 'Performs arithmetic and logical operations on two operands. Operations include add, subtract, AND, OR, set less than, etc. The ALU also generates a Zero flag for branch conditions.')"
+          />
+
+          <!-- Register File -->
+          <rect
+            x="510"
+            y="311"
+            width="207"
+            height="228"
+            fill="rgba(34, 197, 94, 0)"
+            stroke="rgba(34, 197, 94, 0.2)"
+            stroke-width="0"
+            rx="10"
+            ry="10"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Register File', 'Contains 32 general-purpose registers ($0-$31). Provides two read ports for source operands and one write port for the destination. Register $0 is always zero.')"
+          />
+
+          <!-- Sign Extend -->
+          <rect
+            x="635"
+            y="557"
+            width="80"
+            height="121"
+            fill="rgba(168, 85, 247, 0)"
+            stroke="rgba(168, 85, 247, 0.2)"
+            stroke-width="0"
+            rx="8"
+            ry="8"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Sign Extend Unit', 'Extends the 16-bit immediate field from I-type instructions to 32 bits by copying the sign bit (bit 15) to the upper 16 bits. Preserves the sign of negative numbers.')"
+          />
+
+          <!-- ALU Source Multiplexer -->
+          <rect
+            x="786"
+            y="380"
+            width="45"
+            height="147"
+            fill="rgba(236, 72, 153, 0)"
+            stroke="rgba(236, 72, 153, 0.2)"
+            stroke-width="0"
+            rx="6"
+            ry="6"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'ALU Source Multiplexer', 'Selects the second ALU operand: either data from register rt or the sign-extended immediate value. Controlled by the ALUSrc signal.')"
+          />
+
+          <!-- Data Memory -->
+          <rect
+            x="1033"
+            y="343"
+            width="180"
+            height="167"
+            fill="rgba(14, 165, 233, 0)"
+            stroke="rgba(14, 165, 233, 0.2)"
+            stroke-width="0"
+            rx="8"
+            ry="8"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Data Memory', 'Stores and loads data for the program. Used by load/store instructions (lw, sw). The ALU result provides the memory address, and register data provides the value to store.')"
+          />
+
+          <!-- Write Data Multiplexer -->
+          <rect
+            x="1263"
+            y="342"
+            width="38"
+            height="136"
+            fill="rgba(236, 72, 153, 0)"
+            stroke="rgba(236, 72, 153, 0.2)"
+            stroke-width="0"
+            rx="6"
+            ry="6"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Write Data Multiplexer', 'Selects what data to write back to the register file: ALU result for R-type instructions or memory data for load instructions. Controlled by MemToReg signal.')"
+          />
+
+          <!-- ALU Control -->
+          <circle
+            cx="924"
+            cy="507"
+            r="40"
+            fill="rgba(251, 191, 36, 0)"
+            stroke="rgba(251, 191, 36, 0.2)"
+            stroke-width="0"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'ALU Control Unit', 'Generates the specific ALU control signals based on the ALUOp control signals and the function field of R-type instructions. Determines which operation the ALU performs.')"
+          />
+
+          <!-- Jump Address Multiplexer -->
+          <rect
+            x="1050"
+            y="26"
+            width="51"
+            height="148"
+            fill="rgba(236, 72, 153, 0)"
+            stroke="rgba(236, 72, 153, 0.2)"
+            stroke-width="0"
+            rx="6"
+            ry="6"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Jump Address Multiplexer', 'Selects between the branch/sequential address and the jump target address for jump instructions. Part of the PC selection logic.')"
+          />
+
+          <!-- Write Register Multiplexer -->
+          <rect
+            x="410"
+            y="395"
+            width="51"
+            height="142"
+            fill="rgba(236, 72, 153, 0)"
+            stroke="rgba(236, 72, 153, 0.2)"
+            stroke-width="0"
+            rx="6"
+            ry="6"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Write Register Multiplexer', 'Selects which register to write to: rt field for I-type instructions or rd field for R-type instructions. Controlled by the RegDst signal.')"
+          />
+
+          <!-- RegDst -->
+          <rect
+            x="395"
+            y="558"
+            width="73"
+            height="26"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'RegDst Control Signal', 'Register Destination control signal. Determines whether the destination register comes from the rt field (0) or rd field (1) of the instruction.')"
+          />
+
+          <!-- RegWrite -->
+          <rect
+            x="569"
+            y="264"
+            width="93"
+            height="28"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'RegWrite Control Signal', 'Register Write enable signal. When asserted (1), allows data to be written to the register file. When deasserted (0), prevents writing.')"
+          />
+
+          <!-- PCSrc -->
+          <rect
+            x="977"
+            y="238"
+            width="65"
+            height="28"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'PCSrc Control Signal', 'PC Source control signal. Selects the next PC value: 0 for PC+4 (sequential), 1 for branch target address. Used with branch condition logic.')"
+          />
+
+          <!-- MemWrite -->
+          <rect
+            x="1068"
+            y="298"
+            width="102"
+            height="24"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'MemWrite Control Signal', 'Memory Write enable signal. When asserted (1), allows data to be written to data memory (store operations). When deasserted (0), prevents memory writes.')"
+          />
+
+          <!-- ALUSrc -->
+          <rect
+            x="773"
+            y="545"
+            width="77"
+            height="26"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'ALUSrc Control Signal', 'ALU Source control signal. Selects the second ALU input: 0 for register data (R-type), 1 for sign-extended immediate (I-type).')"
+          />
+
+          <!-- ALUOp -->
+          <rect
+            x="890"
+            y="560"
+            width="76"
+            height="25"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'ALUOp Control Signal', 'ALU Operation control signal. A 2-bit signal that tells the ALU Control unit what type of operation to perform: 00 (add), 01 (subtract), 10 (R-type function).')"
+          />
+
+          <!-- MemRead -->
+          <rect
+            x="1067"
+            y="533"
+            width="101"
+            height="27"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'MemRead Control Signal', 'Memory Read enable signal. When asserted (1), enables reading from data memory (load operations). When deasserted (0), memory output is ignored.')"
+          />
+
+          <!-- Jump Address -->
+          <rect
+            x="596"
+            y="26"
+            width="432"
+            height="25"
+            fill="rgba(16, 185, 129, 0)"
+            stroke="rgba(16, 185, 129, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Jump Address', 'The 26-bit jump address from the instruction, shifted left 2 bits and combined with the upper 4 bits of PC+4 to form the complete 32-bit jump target address.')"
+          />
+
+          <!-- MemToReg -->
+          <rect
+            x="1220"
+            y="295"
+            width="125"
+            height="31"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'MemToReg Control Signal', 'Memory to Register control signal. Selects write-back data: 0 for ALU result (R-type), 1 for memory data (load instructions).')"
+          />
+
+          <!-- Jump -->
+          <rect
+            x="1050"
+            y="198"
+            width="59"
+            height="38"
+            fill="rgba(99, 102, 241, 0)"
+            stroke="rgba(99, 102, 241, 0.2)"
+            stroke-width="0"
+            rx="4"
+            ry="4"
+            filter="url(#softBlur)"
+            class="cursor-pointer"
+            onclick="showTooltip(event, 'Jump Control Signal', 'Jump control signal. When asserted (1), selects the jump target address as the next PC value, enabling jump instruction execution.')"
+          />
+        </svg>
+      </div>
+
+      <!-- Tooltip -->
+      <div
+        id="tooltip"
+        class="fixed hidden bg-gray-800 text-white p-4 rounded-lg shadow-xl max-w-sm z-50"
+      >
+        <div id="tooltip-title" class="font-bold text-lg mb-2"></div>
+        <div id="tooltip-content" class="text-sm leading-relaxed"></div>
+        <button
+          onclick="hideTooltip()"
+          class="absolute top-2 right-2 text-white hover:text-gray-300 text-xl font-bold"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+    <script>
+      let currentLanguage = "EN";
+
+      function toggleMobileMenu() {
+        const mobileMenu = document.getElementById("mobile-menu");
+        const menuIcon = document.getElementById("menu-icon");
+        const closeIcon = document.getElementById("close-icon");
+
+        mobileMenu.classList.toggle("hidden");
+        menuIcon.classList.toggle("hidden");
+        closeIcon.classList.toggle("hidden");
+      }
+
+      function toggleLanguageDropdown() {
+        const dropdown = document.getElementById("language-dropdown");
+        dropdown.classList.toggle("hidden");
+      }
+
+      function selectLanguage(lang) {
+        currentLanguage = lang;
+
+        // Update desktop display
+        document.getElementById("current-lang").textContent = lang;
+
+        // Update mobile buttons
+        const mobileEN = document.getElementById("mobile-en");
+        const mobileHE = document.getElementById("mobile-he");
+
+        if (lang === "EN") {
+          window.location.href = "map_en.html";
+        } else {
+          window.location.href = "map_he.html";
+        }
+
+        // Hide dropdown
+        document.getElementById("language-dropdown").classList.add("hidden");
+
+        console.log("Language changed to:", lang);
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("language-dropdown");
+        const button = event.target.closest("button");
+
+        if (
+          !button ||
+          !button.onclick ||
+          button.onclick.toString().indexOf("toggleLanguageDropdown") === -1
+        ) {
+          dropdown.classList.add("hidden");
+        }
+      });
+
+      // Close mobile menu when clicking on links
+      document.querySelectorAll("#mobile-menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          toggleMobileMenu();
+        });
+      });
+    </script>
+    <script>
+      function showTooltip(event, title, content) {
+        const tooltip = document.getElementById("tooltip");
+        const titleEl = document.getElementById("tooltip-title");
+        const contentEl = document.getElementById("tooltip-content");
+
+        titleEl.textContent = title;
+        contentEl.textContent = content;
+
+        // Position tooltip near click
+        let left = event.clientX;
+        let top = event.clientY + 10;
+
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const tooltipWidth = 320;
+        const tooltipHeight = 150;
+
+        if (left + tooltipWidth > viewportWidth) {
+          left = event.clientX - tooltipWidth - 10;
+        }
+
+        if (top + tooltipHeight > viewportHeight) {
+          top = event.clientY - tooltipHeight - 10;
+        }
+
+        if (left < 10) left = 10;
+        if (top < 10) top = 10;
+
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
+        tooltip.classList.remove("hidden");
+      }
+
+      function hideTooltip() {
+        document.getElementById("tooltip").classList.add("hidden");
+      }
+
+      // Hide tooltip when clicking outside
+      document.addEventListener("click", function (event) {
+        const tooltip = document.getElementById("tooltip");
+        if (!event.target.closest("svg") && !tooltip.contains(event.target)) {
+          hideTooltip();
+        }
+      });
+    </script>
+  </body>
+</html>
