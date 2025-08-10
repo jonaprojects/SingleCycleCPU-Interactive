@@ -38,24 +38,149 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans leading-relaxed">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-2xl font-bold text-indigo-600">MIPS Guide</h1>
-                    </div>
+ <nav class="bg-blue-700 shadow-lg mb-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Desktop Menu -->
+          <div
+            class="hidden md:flex items-center space-x-8 w-full justify-center"
+          >
+            <a
+              href="map_en.html"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Map
+            </a>
+            <a
+              href="learn_en.html"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Learn
+            </a>
+
+            <!-- Language Selector -->
+            <div class="relative">
+              <button
+                onclick="toggleLanguageDropdown()"
+                class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20 flex items-center"
+              >
+                <span id="current-lang">EN</span>
+                <svg
+                  class="ml-1 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </button>
+
+              <div
+                id="language-dropdown"
+                class="hidden absolute right-0 mt-2 w-24 bg-white rounded-md shadow-lg z-50"
+              >
+                <div class="py-1">
+                  <button
+                    onclick="selectLanguage('EN')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  >
+                    EN
+                  </button>
+                  <button
+                    onclick="selectLanguage('HE')"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  >
+                    HE
+                  </button>
                 </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#introduction" class="text-gray-700 hover:text-indigo-600 transition-colors duration-200">Introduction</a>
-                    <a href="#architecture" class="text-gray-700 hover:text-indigo-600 transition-colors duration-200">Architecture</a>
-                    <a href="#instructions" class="text-gray-700 hover:text-indigo-600 transition-colors duration-200">Instructions</a>
-                    <a href="#datapath" class="text-gray-700 hover:text-indigo-600 transition-colors duration-200">Datapath</a>
-                    <a href="#control" class="text-gray-700 hover:text-indigo-600 transition-colors duration-200">Control</a>
-                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Mobile menu button -->
+          <div class="md:hidden flex items-center">
+            <button
+              onclick="toggleMobileMenu()"
+              class="text-white hover:text-blue-200 p-2 rounded-md"
+            >
+              <svg
+                id="menu-icon"
+                class="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+              <svg
+                id="close-icon"
+                class="h-6 w-6 hidden"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
         </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden pb-4">
+          <div class="flex flex-col space-y-2">
+            <a
+              href="map_en.html"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Map
+            </a>
+            <a
+              href="learn_en.html"
+              class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-lg font-medium transition duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              Learn
+            </a>
+
+            <!-- Mobile Language Selector -->
+            <div class="px-3 py-2">
+              <span class="text-white text-sm opacity-75 block mb-2"
+                >Language:</span
+              >
+              <div class="flex space-x-3">
+                <button
+                  onclick="selectLanguage('EN')"
+                  id="mobile-en"
+                  class="px-3 py-1 rounded-md text-sm font-medium bg-white bg-opacity-20 text-white"
+                >
+                  EN
+                </button>
+                <button
+                  onclick="selectLanguage('HE')"
+                  id="mobile-he"
+                  class="px-3 py-1 rounded-md text-sm font-medium text-white hover:bg-white hover:bg-opacity-20"
+                >
+                  HE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
@@ -858,4 +983,65 @@
         </div>
     </footer>
 </body>
+  <script>
+      let currentLanguage = "HE";
+
+      function toggleMobileMenu() {
+        const mobileMenu = document.getElementById("mobile-menu");
+        const menuIcon = document.getElementById("menu-icon");
+        const closeIcon = document.getElementById("close-icon");
+
+        mobileMenu.classList.toggle("hidden");
+        menuIcon.classList.toggle("hidden");
+        closeIcon.classList.toggle("hidden");
+      }
+
+      function toggleLanguageDropdown() {
+        const dropdown = document.getElementById("language-dropdown");
+        dropdown.classList.toggle("hidden");
+      }
+
+      function selectLanguage(lang) {
+        currentLanguage = lang;
+
+        // Update desktop display
+        document.getElementById("current-lang").textContent = lang;
+
+        // Update mobile buttons
+        const mobileEN = document.getElementById("mobile-en");
+        const mobileHE = document.getElementById("mobile-he");
+
+        if (lang === "EN") {
+          window.location.href = "learn_en.html";
+        } else {
+          window.location.href = "learn_he.html";
+        }
+
+        // Hide dropdown
+        document.getElementById("language-dropdown").classList.add("hidden");
+
+        console.log("Language changed to:", lang);
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("language-dropdown");
+        const button = event.target.closest("button");
+
+        if (
+          !button ||
+          !button.onclick ||
+          button.onclick.toString().indexOf("toggleLanguageDropdown") === -1
+        ) {
+          dropdown.classList.add("hidden");
+        }
+      });
+
+      // Close mobile menu when clicking on links
+      document.querySelectorAll("#mobile-menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          toggleMobileMenu();
+        });
+      });
+    </script>
 </html>
